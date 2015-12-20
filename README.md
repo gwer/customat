@@ -8,7 +8,7 @@ Library for generation color palette based on the base color for material design
     var baseColor = '009688',
         palette = customat(baseColor)
 
-    console.log(customat)
+    console.log(palette)
 </script>
 ```
 ##### Output:
