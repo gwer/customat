@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customat example</title>
+    <style>
+        #palette {
+            margin-top: 10px;
+        }
+        #palette div {
+            padding: 15px;
+            width: 300px;
+        }
+    </style>
+    <script src="customat.js"></script>
+    <script>
+        window.onload = function () {
+            var button = document.getElementById('generate')
+            
+            button.onclick = function () {
+                renderPalette(getPalette())
+            }
+            
+            renderPalette(getPalette())
+        }
+        
+        function getPalette() {
+            var baseColor = document.getElementById('color').value
+            
+            return customat(baseColor)
+        }
+
+        function renderPalette(palette) {
+            var output = ''
+            
+            for (var key in palette) {
+                output += getDiv(key, palette[key])
+            }
+            
+            document.getElementById('palette').innerHTML = output
+        }
+        
+        function getDiv(key, color) {
+            return ''
+                +   '<div style="background:#' + color + ';">'
+                +       key + ': ' + color
+                +   '</div>'
+        }
+    </script>
+</head>
+<body>
+    <input type="text" id="color" value="009688">
+    <button id="generate">Generate</button>
+    <div id="palette"></div>
+</body>
+</html>
