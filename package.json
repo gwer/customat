@@ -1,0 +1,32 @@
+{
+  "name": "customat",
+  "version": "0.1.0",
+  "description": "Material design palette generator",
+  "main": "customat.js",
+  "scripts": {
+    "build": "babel customat.js -o customat.cmpld.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gwer/customat.git"
+  },
+  "keywords": [
+    "material",
+    "design",
+    "google",
+    "palette",
+    "color"
+  ],
+  "author": "gwer",
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/gwer/customat/issues"
+  },
+  "homepage": "https://github.com/gwer/customat",
+  "devDependencies": {
+    "babel-cli": "^6.3.17",
+    "babel-preset-es2015": "^6.3.13",
+    "install": "^0.4.1",
+    "npm": "^3.5.2"
+  }
+}
