@@ -1,5 +1,5 @@
 ;(function() {
-    var config = {
+    var paletteConfigs = {
             50: {
                 alpha: 0.12,
                 blend: 255
@@ -41,29 +41,40 @@
                 blend: 0
             }
         },
-        palette = {},
-        i = 0
-
-    function getColor(base, config) {
-        var color = hex2rgb(base)
-
-        for (var i in color) {
-            color[i] = (color[i]*config.alpha + config.blend*(1 - config.alpha))
+        colorFormats = {
+            hex: {
+                regexp: /^([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/,
+                convert: {
+                    toInt: hex2dec,
+                    fromInt: dec2hex
+                },
+                get: data => data.join('')
+            },
+            hexHash: {
+                regexp: /^#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/,
+                convert: {
+                    toInt: hex2dec,
+                    fromInt: dec2hex
+                },
+                get: data => '#' + data.join('')
+            },
+            rgb: {
+                regexp: /^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/,
+                convert: {
+                    toInt: dec2dec,
+                    fromInt: dec2dec
+                },
+                get: data => 'rgb(' + data.join() + ')'
+            },
+            rgbPercent: {
+                regexp: /^rgb\((\d{1,3})%,\s*(\d{1,3})%,\s*(\d{1,3})%\)$/,
+                convert: {
+                    toInt: per2dec,
+                    fromInt: dec2per
+                },
+                get: data => 'rgb(' + data.join('%,') + '%)'
+            }
         }
-        return color
-    }
-
-    function hex2rgb(hex) {
-        return {
-            r: hex2dec(hex.slice(0, 2)),
-            g: hex2dec(hex.slice(2, 4)),
-            b: hex2dec(hex.slice(4, 6))
-        }
-    } 
-
-    function rgb2hex(rgb) {
-        return dec2hex(rgb.r) + dec2hex(rgb.g) + dec2hex(rgb.b)
-    }
 
     function hex2dec(hex) {
         return parseInt(hex, 16)
@@ -76,12 +87,60 @@
         hex = dec.toString(16)
         return dec > 0xF ? hex : '0' + hex
     }
+    
+    function dec2dec(dec) {
+        return Math.round(dec)
+    }
+    
+    function per2dec(per) {
+        return Math.round(per * 2.55)
+    }
+    
+    function dec2per(per) {
+        return Math.round(per / 2.55)
+    }
+    
+    function getPalette(baseSplit, colorFormat) {
+        var palette = {},
+            baseNormalized = normalizeColor(baseSplit, colorFormat)
+        
+        if (baseNormalized.some(ch => ch < 0 || ch > 255)) return null;
 
-    window.customat = function (base) {
-        for (i in config) {
-            palette[i] = rgb2hex(getColor(base, config[i]))
+        for (var i in paletteConfigs) {
+            palette[i] =  getOriginalFormat(getColor(baseNormalized,
+                                                     paletteConfigs[i]),
+                                            colorFormat)
         }
 
-        return palette
+        return palette        
+    }
+    
+    function normalizeColor(baseSplit, colorFormat) {
+        return baseSplit.map(colorFormat.convert.toInt)
+    }
+
+    function getColor(base, config) {
+        var color = base.slice()
+        
+        for (var ch in color) {
+            color[ch] = color[ch]*config.alpha
+                        + config.blend*(1 - config.alpha)
+        }
+        return color
+    }
+
+    function getOriginalFormat(color, colorFormat) {
+        return colorFormat.get(color.map(colorFormat.convert.fromInt))
+    }
+    
+    window.customat = function (base) {
+        var result
+        
+        for (var format in colorFormats) {
+            if (result = colorFormats[format].regexp.exec(base)) {
+                return getPalette(result.slice(1), colorFormats[format])
+            }
+        }        
+        return null
     }
 })()
