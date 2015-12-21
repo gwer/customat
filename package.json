@@ -1,6 +1,6 @@
 {
   "name": "customat",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Material design palette generator",
   "main": "customat.js",
   "scripts": {
@@ -15,7 +15,10 @@
     "design",
     "google",
     "palette",
-    "color"
+    "color",
+    "generator",
+    "browser",
+    "client"
   ],
   "author": "gwer",
   "license": "WTFPL",

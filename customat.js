@@ -133,7 +133,7 @@
         return colorFormat.get(color.map(colorFormat.convert.fromInt))
     }
     
-    window.customat = function (base) {
+    function customat(base) {
         var result
         
         for (var format in colorFormats) {
@@ -142,5 +142,12 @@
             }
         }        
         return null
+    }
+
+    if (typeof module !== 'undefined'
+        && typeof module.exports !== 'undefined') {
+        module.exports = customat
+    } else {
+        window.customat = customat
     }
 })()
