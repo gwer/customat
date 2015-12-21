@@ -1,5 +1,7 @@
 # Customat
-Library for generation color palette based on the base color for material design. 
+Library for generation color palette based on the base color for material design.
+
+[Demo](http://gwer.github.io/customat/example.html "Demo").
 
 ## Usage
 Customat using some ES6 features therefore in production you can use ES5-compiled version customat.cmpld.js. 
